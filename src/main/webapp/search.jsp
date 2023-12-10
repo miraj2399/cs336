@@ -16,7 +16,8 @@ function selectFlight(flight){
 	const type = reserve_section.getAttribute("data-value")
 	console.log(type);
 	const reserveButton = document.createElement('button');
-	reserveButton.textContent = 'Book now!';
+	reserveButton.textContent = 'Book now! ';
+	
 	
 	if (type=="oneway" && selectedFlights.length==1) {
 		reserve_section.appendChild(reserveButton);
