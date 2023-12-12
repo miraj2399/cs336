@@ -37,7 +37,7 @@ public Connection getConnection() {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "rootroot");
+			connection = DriverManager.getConnection(connectionUrl,"root", "Lemonsoda123!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,7 +90,19 @@ public String ConvertDateToSpecialString(String dateString) {
     return dayOfWeekString;
 	
 }
-
+public ResultSet findQuestions() {
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from question");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
 public ResultSet searchDirectFlight(String origin, String destination, String dateString) {
 	Statement st;
 	try {
@@ -106,6 +118,23 @@ public ResultSet searchDirectFlight(String origin, String destination, String da
 		return null;
 	}
 	
+}
+
+public void insertReply(String reply, String repUsername, String questionId) {
+
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate(
+				
+				"UPDATE question SET representative = '" + repUsername + "', answer = '" + reply + "' WHERE id = '" + questionId + "';"
+				
+				);
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 }
 
 public ResultSet searchOneTransitFlight(String origin, String destination, String dateString) {
@@ -142,8 +171,276 @@ public ResultSet searchOneTransitFlight(String origin, String destination, Strin
 		e.printStackTrace();
 		return null;
 	}
-	
 
+}
+
+public void repAddFlight(String id, String dayOfWeek, String departing, String arriving) {
+	
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("Insert into flight(id, day_of_week, departing_airport, arriving_airport) values('"+id+"','"+dayOfWeek+"','"+departing+"', '"+arriving+"');");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+
+public void repAddAirportAirline(String table, String id, String name) {
+	
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("Insert into "+table+"(id, name) values('"+id+"','"+name+"');");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void repEditFlight(String id, String departing, String arriving) {
+	
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("UPDATE flight SET departing_airport = '" + departing + "', arriving_airport = '" + arriving + "' WHERE id = '" + id + "';");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void repEditAirportAirline(String table, String id, String name) {
+	
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("UPDATE " + table + " SET name = '" + name + "' WHERE id = '" + id + "';");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+
+public void repDeleteFlight(String id) {
+	
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("Delete from flight where id = '"+id+"';");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void repDeleteAirportAirline(String table, String id) {
+	
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("Delete from "+table+" where id = '"+id+"';");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void repBookFlightForUser(String username) {
+	
+	//NEED TO FAKE
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		//rs = st.executeUpdate("UPDATE " + table + " SET firstname = '" + firstname + "' WHERE username = '" + username + "';");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void repCancelFlightForUser(String username) {
+	
+	//NEED TO FAKE
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		//rs = st.executeUpdate("UPDATE " + table + " SET firstname = '" + firstname + "' WHERE username = '" + username + "';");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public ResultSet findTopActiveFlight() {
+	
+	//NEED TO FAKE
+	
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from NEED TO COMPLETE");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet findTopCustomerByRevenue() {
+	
+	//NEED TO FAKE
+	
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from NEED TO COMPLETE");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet adminViewRevenues(String table, String particular) {
+	
+	//NEED TO FAKE
+	
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from " +table+ " USE particularID SOMEHOW");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet adminGetReservation(String table, String uniqueId) {
+	
+	//NEED TO FAKE
+	
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from " +table+ " USE UNIQUEID SOMEHOW");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet adminGetMonthSales(String month) {
+	
+	//NEED TO FAKE
+	
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from custRep");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public void adminEditRep(String table, String username, String firstname) {
+	Statement st;
+	try {
+		
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate(
+				
+				"UPDATE " + table + " SET firstname = '" + firstname + "' WHERE username = '" + username + "';"
+				
+				);
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void adminDeleteRep(String table, String username) {
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("Delete from "+table+" where username = '"+username+"';");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void adminAddRep(String table, String username) {
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		int rs;
+		rs = st.executeUpdate("Insert into "+table+"(username) values('"+username+"');");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public ResultSet checkIfAdmin(String username, String password) {
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from admin where username='"+username+"' and password='"+password+"'");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet checkIfCustomerRep(String username, String password) {
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from custRep where username='"+username+"' and password='"+password+"'");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
 }
 
 public ResultSet authenticate(String username, String password) {
@@ -151,7 +448,7 @@ public ResultSet authenticate(String username, String password) {
 	try {
 		st = this.connection.createStatement();
 		ResultSet rs;
-		rs = st.executeQuery("select * from customer where username='"+username+"' and password='"+password+"'");
+		rs = st.executeQuery("select * from customer where username='"+username+"' and password='"+password+"'");		
 		return rs;
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
