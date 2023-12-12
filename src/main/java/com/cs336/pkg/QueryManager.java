@@ -1,4 +1,5 @@
 package com.cs336.pkg;
+import  java.util.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -91,14 +92,18 @@ public String ConvertDateToSpecialString(String dateString) {
 	
 }
 
-public ResultSet searchDirectFlight(String origin, String destination, String dateString) {
+public ResultSet searchDirectFlight(String origin, String destination, String dateString, Boolean sorted) {
 	Statement st;
 	try {
 		String dayOfWeekString = ConvertDateToSpecialString(dateString);
 		st = this.connection.createStatement();
 		ResultSet rs;
 		System.out.print(dayOfWeekString);
-		rs = st.executeQuery("select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + "and day_of_week like '"+dayOfWeekString+"'");
+		String q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + "and day_of_week like '"+dayOfWeekString+"'";
+		if (sorted) {
+			q+=" order by price asc";
+		}
+		rs = st.executeQuery(q);
 		return rs;
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
@@ -160,4 +165,163 @@ public ResultSet authenticate(String username, String password) {
 	}
 }
 
+
+
+public int createTicket(String username) {
+	try {
+	Statement st = this.connection.createStatement();
+	java.util.Date utilDate = new java.util.Date();
+    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+	String q = "insert into ticket(username,date_purchased) values('"+username +  "', '"+sqlDate+"')";
+	int rs;
+	rs = st.executeUpdate(q);
+	q = "select Max(id) as maxid from ticket";
+	ResultSet rs1 = st.executeQuery(q);
+	if (rs1.next()) {
+	return Integer.parseInt(rs1.getString("maxid"));
+	}
+	return -1;
+	}
+	catch(Exception e) {
+		System.out.print(e);
+		return -1;
+	}
+	
+}	
+public int createBooking(String from, String to, String username) {
+	try {
+	int ticket_id = createTicket(username);
+	Statement st = this.connection.createStatement();
+	String q = "insert into booking(from_airport,to_airport,ticket_id) values('"+from+"', '"+to+"', "+ticket_id+");";
+	int rs;
+	rs = st.executeUpdate(q);
+	q = "select Max(id) as maxid from booking";
+	ResultSet rs1 = st.executeQuery(q);
+	if (rs1.next()) {
+		return Integer.parseInt(rs1.getString("maxid"));
+		}
+	return -1;
+	}
+	catch(Exception e) {
+		System.out.println(e);
+		return -1;
+	}	
 }
+
+public int updateItinerary(String from, String to, String username, String flight1, String flight2, String departs) {
+	
+	try {
+		
+		int booking_num = createBooking(from,to,username);
+		Statement st = this.connection.createStatement();
+		String q;
+		ResultSet rs;
+		String arrives;
+		Random random;
+		int c;
+		int seat;
+		String plane_id;
+		
+		q = "select * from flight where id='"+flight1+"';";
+		rs = st.executeQuery(q);
+		plane_id = "";
+		if (rs.next()) {
+			 plane_id = rs.getString("aircraft_id");
+		}
+		arrives = departs;
+		random = new Random();
+		c = random.nextInt(2);
+		seat = random.nextInt(101);
+		q = "insert into itinerary values(";
+		q+= booking_num;
+		q+=", '";
+		q+=flight1;
+		q+="', '";
+		q+=departs;
+		q+="', '";
+		q+=arrives;
+		q+="', ";
+		q+= seat;
+		q+= ", ";
+		q+=c;
+		q+= ", ";
+		q+= Integer.parseInt(plane_id);
+		q+= ");";
+		
+		int rs1 = st.executeUpdate(q);
+		
+		
+		if (flight2!=null) {
+			q = "select * from flight where id='"+flight2+"';";
+			rs = st.executeQuery(q);
+			plane_id = "";
+			if (rs.next()) {
+				 plane_id = rs.getString("aircraft_id");
+			}
+			arrives = departs;
+			random = new Random();
+			c = random.nextInt(2);
+			seat = random.nextInt(101);
+			q = "insert into itinerary values(";
+			q+= booking_num;
+			q+=", '";
+			q+=flight2;
+			q+="', '";
+			q+=departs;
+			q+="', '";
+			q+=arrives;
+			q+="', ";
+			q+= seat;
+			q+= ", ";
+			q+=c;
+			q+= ", ";
+			q+= Integer.parseInt(plane_id);
+			q+= ");";
+			int rs2 = st.executeUpdate(q);
+			return rs2;
+
+		}
+		return rs1;
+		
+	} catch (SQLException e) {
+		
+		// TODO Auto-generated catch block
+		System.out.println(e);
+		e.printStackTrace();
+		return -1;
+	}
+	
+	
+}
+
+public Boolean checkAvailability(String from, String to, String flight, String date) {
+	try {
+		int numberOfSeats = 0;
+		String q = "select seat_num from plane where id = (select aircraft_id from flight  where id =\""+ flight + "\" )";
+		Statement st = this.connection.createStatement();
+		ResultSet rs ;
+		rs = st.executeQuery(q);
+		if (rs.next()) {
+		numberOfSeats = Integer.parseInt(rs.getString("seat_num"));
+		}
+		int numberOfReservations = 0;
+		q= " select count(*) as n from itinerary where flight_id=\""+flight+"\" and departs_date = '"+date+"';";
+		rs = st.executeQuery(q);
+		if (rs.next()) {
+			numberOfReservations = Integer.parseInt(rs.getString("n"));
+			}
+		return numberOfReservations<numberOfSeats;
+	}
+	catch(Exception e){
+		System.out.print(e);
+		return false;
+	}
+}
+
+}
+	
+	
+	
+	
+	
+	
