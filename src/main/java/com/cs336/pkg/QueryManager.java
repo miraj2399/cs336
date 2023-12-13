@@ -352,6 +352,26 @@ public Boolean checkAvailability(String from, String to, String flight, String d
 	}
 }
 
+public String getAddressOfAirport(String airport) {
+	
+	try {
+		Statement st = this.connection.createStatement();
+		String q = "Select address from airport where id='"+airport +"';";
+		ResultSet rs = st.executeQuery(q);
+		if (rs.next()) {
+			return rs.getString("address");
+		}
+		return "";
+	} catch (SQLException e) {
+	
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return "";
+	}
+	
+	
+}
+
 }
 	
 	
