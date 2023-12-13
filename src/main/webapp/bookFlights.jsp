@@ -15,7 +15,13 @@ String flights = request.getParameter("flights");
 String[] arrOfFlights = flights.split(",", 2);
 String username = session.getAttribute("user").toString();
 Boolean available = true;
-
+if (arrOfFlights.length==2){
+	available = available && query.checkAvailability(origin, destination, arrOfFlights[0] ,date);
+	available = available && query.checkAvailability(origin, destination, arrOfFlights[1] ,date);
+}
+else{
+		available = available && query.checkAvailability(origin, destination, arrOfFlights[0] ,date);
+}
 
 
 
