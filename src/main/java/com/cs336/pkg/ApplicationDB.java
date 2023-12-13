@@ -64,24 +64,9 @@ public class ApplicationDB {
 	
 	
 	public static void main(String[] args) {
-		String dateString = "2023-12-06"; // Example date string
-
-        // Define the formatter based on the expected format of the date string
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        // Parse the date string into a LocalDate object
-        LocalDate date = LocalDate.parse(dateString, formatter);
-
-        // Get the DayOfWeek enum for the parsed date
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-
-        // Print the day of the week (e.g., MONDAY, TUESDAY, etc.)
-        System.out.println("Day of Week: " + dayOfWeek);
-
-        // To get the name of the weekday as a string (e.g., "Monday")
-        String dayOfWeekString = dayOfWeek.toString();
-        System.out.println("Day of Week (String): " + dayOfWeekString);
-
+		QueryManager query = new QueryManager();
+		System.out.println(query.checkAvailability("EWR", "LAX", "UA1600", "2023-12-12"));
+		query.updateItinerary("EWR", "LAX", "miraj", "UA1600", "UA1244", "2023-12-12");
 	}
 
 	

@@ -188,9 +188,8 @@ try {
     
     htmlText += "</div>";
 
-    ResultSet rs = query.searchDirectFlight(origin, destination, date,false);
-  
-    QueryManager query2 = new QueryManager();
+    ResultSet rs = query.searchDirectFlight(origin, destination, date,true);
+
     htmlText += "<div class='direct'>";
     htmlText += "<h3>Direct flights:</h3>";
     htmlText += "<ul style='list-style-type:none; padding: 0;'>";
@@ -200,10 +199,6 @@ try {
         htmlText += "Departs: " + rs.getString("departing_time") + "<br>";
         htmlText += "Arrives: " + rs.getString("arriving_time") + "<br>";
         htmlText += "Price: " + rs.getString("price");
-        String address = query2.getAddressOfAirport(origin);
-        htmlText += "To <a href='//maps.google.com/?q="+ address + "'>"+ origin +"</a>";
-        address = query2.getAddressOfAirport(destination);
-        htmlText += "To <a href='//maps.google.com/?q="+ address + "'>"+ destination +"</a>";
         
         htmlText += "<button class='book-button' id='"+rs.getString("id")+"' onclick='selectFlight(\"" + rs.getString("id") + "\")'>select</button>";
         htmlText += "</li>";
@@ -235,7 +230,7 @@ try {
   
     
     if (choice.equals("roundtrip")){
-    	rs = query.searchDirectFlight(destination, origin, date,false);
+    	rs = query.searchDirectFlight(destination, origin, date,true);
     	
         htmlText += "<div class='direct'>";
         htmlText += "<h3>Direct flights:</h3>";

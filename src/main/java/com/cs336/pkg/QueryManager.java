@@ -1,4 +1,5 @@
 package com.cs336.pkg;
+import  java.util.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,9 +8,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import com.mysql.jdbc.PreparedStatement;
-
 import java.time.DayOfWeek;
 
 public class QueryManager {
@@ -93,35 +91,41 @@ public String ConvertDateToSpecialString(String dateString) {
     return dayOfWeekString;
 	
 }
-public ResultSet findQuestions() {
-	Statement st;
-	try {
-		st = this.connection.createStatement();
-		ResultSet rs;
-		rs = st.executeQuery("select * from question");
-		return rs;
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return null;
+
+	public ResultSet findQuestions() {
+		Statement st;
+		try {
+			st = this.connection.createStatement();
+			ResultSet rs;
+			rs = st.executeQuery("select * from question");
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
-}
-public ResultSet searchDirectFlight(String origin, String destination, String dateString) {
-	Statement st;
-	try {
-		String dayOfWeekString = ConvertDateToSpecialString(dateString);
-		st = this.connection.createStatement();
-		ResultSet rs;
-		System.out.print(dayOfWeekString);
-		rs = st.executeQuery("select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + "and day_of_week like '"+dayOfWeekString+"'");
-		return rs;
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return null;
+
+	public ResultSet searchDirectFlight(String origin, String destination, String dateString, Boolean sorted) {
+		Statement st;
+		try {
+			String dayOfWeekString = ConvertDateToSpecialString(dateString);
+			st = this.connection.createStatement();
+			ResultSet rs;
+			System.out.print(dayOfWeekString);
+			String q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + "and day_of_week like '"+dayOfWeekString+"'";
+			if (sorted) {
+				q+=" order by price asc";
+			}
+			rs = st.executeQuery(q);
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+
 	}
-	
-}
 
 public void insertReply(String reply, String repUsername, String questionId) {
 
@@ -130,9 +134,9 @@ public void insertReply(String reply, String repUsername, String questionId) {
 		st = this.connection.createStatement();
 		int rs;
 		rs = st.executeUpdate(
-				
+
 				"UPDATE question SET representative = '" + repUsername + "', answer = '" + reply + "' WHERE id = '" + questionId + "';"
-				
+
 				);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
@@ -178,7 +182,7 @@ public ResultSet searchOneTransitFlight(String origin, String destination, Strin
 }
 
 public void repAddFlight(String id, String dayOfWeek, String departing, String arriving) {
-	
+
 	Statement st;
 	try {
 		st = this.connection.createStatement();
@@ -192,10 +196,10 @@ public void repAddFlight(String id, String dayOfWeek, String departing, String a
 
 
 public void repAddAirportAirline(String table, String id, String name) {
-	
+
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		rs = st.executeUpdate("Insert into "+table+"(id, name) values('"+id+"','"+name+"');");
@@ -206,10 +210,10 @@ public void repAddAirportAirline(String table, String id, String name) {
 }
 
 public void repEditFlight(String id, String departing, String arriving) {
-	
+
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		rs = st.executeUpdate("UPDATE flight SET departing_airport = '" + departing + "', arriving_airport = '" + arriving + "' WHERE id = '" + id + "';");
@@ -220,10 +224,10 @@ public void repEditFlight(String id, String departing, String arriving) {
 }
 
 public void repEditAirportAirline(String table, String id, String name) {
-	
+
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		rs = st.executeUpdate("UPDATE " + table + " SET name = '" + name + "' WHERE id = '" + id + "';");
@@ -235,10 +239,10 @@ public void repEditAirportAirline(String table, String id, String name) {
 
 
 public void repDeleteFlight(String id) {
-	
+
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		rs = st.executeUpdate("Delete from flight where id = '"+id+"';");
@@ -249,10 +253,10 @@ public void repDeleteFlight(String id) {
 }
 
 public void repDeleteAirportAirline(String table, String id) {
-	
+
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		rs = st.executeUpdate("Delete from "+table+" where id = '"+id+"';");
@@ -263,11 +267,11 @@ public void repDeleteAirportAirline(String table, String id) {
 }
 
 public void repBookFlightForUser(String username) {
-	
+
 	//NEED TO FAKE
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		//rs = st.executeUpdate("UPDATE " + table + " SET firstname = '" + firstname + "' WHERE username = '" + username + "';");
@@ -278,11 +282,11 @@ public void repBookFlightForUser(String username) {
 }
 
 public void repCancelFlightForUser(String username) {
-	
+
 	//NEED TO FAKE
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		//rs = st.executeUpdate("UPDATE " + table + " SET firstname = '" + firstname + "' WHERE username = '" + username + "';");
@@ -293,9 +297,9 @@ public void repCancelFlightForUser(String username) {
 }
 
 public ResultSet findTopActiveFlight() {
-	
+
 	//NEED TO FAKE
-	
+
 	Statement st;
 	try {
 		st = this.connection.createStatement();
@@ -310,9 +314,9 @@ public ResultSet findTopActiveFlight() {
 }
 
 public ResultSet findTopCustomerByRevenue() {
-	
+
 	//NEED TO FAKE
-	
+
 	Statement st;
 	try {
 		st = this.connection.createStatement();
@@ -327,9 +331,9 @@ public ResultSet findTopCustomerByRevenue() {
 }
 
 public ResultSet adminViewRevenues(String table, String particular) {
-	
+
 	//NEED TO FAKE
-	
+
 	Statement st;
 	try {
 		st = this.connection.createStatement();
@@ -344,9 +348,9 @@ public ResultSet adminViewRevenues(String table, String particular) {
 }
 
 public ResultSet adminGetReservation(String table, String uniqueId) {
-	
+
 	//NEED TO FAKE
-	
+
 	Statement st;
 	try {
 		st = this.connection.createStatement();
@@ -380,13 +384,13 @@ public ResultSet adminGetMonthSales(String monthString, String year) {
 public void adminEditRep(String table, String username, String firstname) {
 	Statement st;
 	try {
-		
+
 		st = this.connection.createStatement();
 		int rs;
 		rs = st.executeUpdate(
-				
+
 				"UPDATE " + table + " SET firstname = '" + firstname + "' WHERE username = '" + username + "';"
-				
+
 				);
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
@@ -451,7 +455,7 @@ public ResultSet authenticate(String username, String password) {
 	try {
 		st = this.connection.createStatement();
 		ResultSet rs;
-		rs = st.executeQuery("select * from customer where username='"+username+"' and password='"+password+"'");		
+		rs = st.executeQuery("select * from customer where username='"+username+"' and password='"+password+"'");
 		return rs;
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
@@ -460,4 +464,216 @@ public ResultSet authenticate(String username, String password) {
 	}
 }
 
+
+
+public int createTicket(String username,String flight1,String flight2) {
+	try {
+	Statement st = this.connection.createStatement();
+	java.util.Date utilDate = new java.util.Date();
+    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    int price = 0;
+
+
+	ResultSet rs1 ;
+	 st = this.connection.createStatement();
+	String q = "select price from flight where id='"+flight1+"';";
+	System.out.print(q);
+	System.out.print("\n");
+	rs1 = st.executeQuery(q);
+	if (rs1.next()) {
+		price+=Integer.parseInt(rs1.getString("price"));
+	}
+	System.out.println(price);
+
+	if (flight2!=null) {
+		q = "select price from flight where id='"+flight2+"';";
+		rs1 = st.executeQuery(q);
+		if (rs1.next()) {
+			price+=Integer.parseInt(rs1.getString("price"));
+		}
+	}
+
+
+
+	q = "insert into ticket(username,date_purchased,total_fare) values('"+username +  "', '"+sqlDate+"', "+price+");";
+	int rs;
+	System.out.print(q);
+	rs = st.executeUpdate(q);
+	q = "select Max(id) as maxid from ticket";
+	 rs1 = st.executeQuery(q);
+	if (rs1.next()) {
+		System.out.println("ticket id: "+ rs1.getString("maxid"));
+	return Integer.parseInt(rs1.getString("maxid"));
+	}
+	return -1;
+	}
+	catch(Exception e) {
+		System.out.print(e);
+		return -1;
+	}
+
 }
+public int createBooking(String from, String to, String username,String flight1, String flight2) {
+	try {
+	int ticket_id = createTicket(username,flight1,flight2);
+
+	Statement st = this.connection.createStatement();
+	 String q = "insert into booking(from_airport,to_airport,ticket_id) values('"+from+"', '"+to+"', "+ticket_id+");";
+	int rs;
+	rs = st.executeUpdate(q);
+	ResultSet rs1;
+	q = "select Max(id) as maxid from booking";
+	rs1 = st.executeQuery(q);
+	if (rs1.next()) {
+		return Integer.parseInt(rs1.getString("maxid"));
+		}
+	return -1;
+	}
+	catch(Exception e) {
+		System.out.println(e);
+		return -1;
+	}
+}
+
+public int updateItinerary(String from, String to, String username, String flight1, String flight2, String departs) {
+
+	try {
+
+		int booking_num = createBooking(from,to,username,flight1,flight2);
+		System.out.println(booking_num);
+		Statement st = this.connection.createStatement();
+		String q;
+		ResultSet rs;
+		String arrives;
+		Random random;
+		int c;
+		int seat;
+		String plane_id;
+
+		q = "select * from flight where id='"+flight1+"';";
+		rs = st.executeQuery(q);
+		plane_id = "";
+		if (rs.next()) {
+			 plane_id = rs.getString("aircraft_id");
+		}
+		arrives = departs;
+		random = new Random();
+		c = random.nextInt(2);
+		seat = random.nextInt(101);
+		q = "insert into itinerary values(";
+		q+= booking_num;
+		q+=", '";
+		q+=flight1;
+		q+="', '";
+		q+=departs;
+		q+="', '";
+		q+=arrives;
+		q+="', ";
+		q+= seat;
+		q+= ", ";
+		q+=c;
+		q+= ", ";
+		q+= Integer.parseInt(plane_id);
+		q+= ");";
+
+		int rs1 = st.executeUpdate(q);
+
+
+		if (flight2!=null) {
+			q = "select * from flight where id='"+flight2+"';";
+			rs = st.executeQuery(q);
+			plane_id = "";
+			if (rs.next()) {
+				 plane_id = rs.getString("aircraft_id");
+			}
+			arrives = departs;
+			random = new Random();
+			c = random.nextInt(2);
+			seat = random.nextInt(101);
+			q = "insert into itinerary values(";
+			q+= booking_num;
+			q+=", '";
+			q+=flight2;
+			q+="', '";
+			q+=departs;
+			q+="', '";
+			q+=arrives;
+			q+="', ";
+			q+= seat;
+			q+= ", ";
+			q+=c;
+			q+= ", ";
+			q+= Integer.parseInt(plane_id);
+			q+= ");";
+			int rs2 = st.executeUpdate(q);
+			return rs2;
+
+		}
+		return rs1;
+
+	} catch (SQLException e) {
+
+		// TODO Auto-generated catch block
+		System.out.println(e);
+		e.printStackTrace();
+		return -1;
+	}
+
+
+}
+
+public Boolean checkAvailability(String from, String to, String flight, String date) {
+	try {
+
+		int numberOfSeats = 0;
+		String q = "select seat_num from plane where id = (select aircraft_id from flight  where id =\""+ flight + "\" )";
+		Statement st = this.connection.createStatement();
+		ResultSet rs ;
+		rs = st.executeQuery(q);
+		if (rs.next()) {
+		numberOfSeats = Integer.parseInt(rs.getString("seat_num"));
+		}
+		int numberOfReservations = 0;
+		q= " select count(*) as n from itinerary where flight_id=\""+flight+"\" and departs_date = '"+date+"';";
+		rs = st.executeQuery(q);
+		if (rs.next()) {
+			numberOfReservations = Integer.parseInt(rs.getString("n"));
+			}
+
+
+
+
+		return numberOfReservations<numberOfSeats;
+	}
+	catch(Exception e){
+		System.out.print(e);
+		return false;
+	}
+}
+
+public String getAddressOfAirport(String airport) {
+
+	try {
+		Statement st = this.connection.createStatement();
+		String q = "Select address from airport where id='"+airport +"';";
+		ResultSet rs = st.executeQuery(q);
+		if (rs.next()) {
+			return rs.getString("address");
+		}
+		return "";
+	} catch (SQLException e) {
+
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return "";
+	}
+
+
+}
+
+}
+
+
+
+
+
