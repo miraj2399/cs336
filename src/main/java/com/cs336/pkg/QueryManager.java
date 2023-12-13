@@ -167,17 +167,43 @@ public ResultSet authenticate(String username, String password) {
 
 
 
-public int createTicket(String username) {
+public int createTicket(String username,String flight1,String flight2) {
 	try {
 	Statement st = this.connection.createStatement();
 	java.util.Date utilDate = new java.util.Date();
     java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-	String q = "insert into ticket(username,date_purchased) values('"+username +  "', '"+sqlDate+"')";
+    int price = 0;
+    
+    
+	ResultSet rs1 ;
+	 st = this.connection.createStatement();
+	String q = "select price from flight where id='"+flight1+"';";
+	System.out.print(q);
+	System.out.print("\n");
+	rs1 = st.executeQuery(q);
+	if (rs1.next()) {
+		price+=Integer.parseInt(rs1.getString("price"));
+	}
+	System.out.println(price);
+	
+	if (flight2!=null) {
+		q = "select price from flight where id='"+flight2+"';";
+		rs1 = st.executeQuery(q);
+		if (rs1.next()) {
+			price+=Integer.parseInt(rs1.getString("price"));
+		}
+	}
+	
+	
+	
+	q = "insert into ticket(username,date_purchased,total_fare) values('"+username +  "', '"+sqlDate+"', "+price+");";
 	int rs;
+	System.out.print(q);
 	rs = st.executeUpdate(q);
 	q = "select Max(id) as maxid from ticket";
-	ResultSet rs1 = st.executeQuery(q);
+	 rs1 = st.executeQuery(q);
 	if (rs1.next()) {
+		System.out.println("ticket id: "+ rs1.getString("maxid"));
 	return Integer.parseInt(rs1.getString("maxid"));
 	}
 	return -1;
@@ -188,15 +214,17 @@ public int createTicket(String username) {
 	}
 	
 }	
-public int createBooking(String from, String to, String username) {
+public int createBooking(String from, String to, String username,String flight1, String flight2) {
 	try {
-	int ticket_id = createTicket(username);
+	int ticket_id = createTicket(username,flight1,flight2);
+	
 	Statement st = this.connection.createStatement();
-	String q = "insert into booking(from_airport,to_airport,ticket_id) values('"+from+"', '"+to+"', "+ticket_id+");";
+	 String q = "insert into booking(from_airport,to_airport,ticket_id) values('"+from+"', '"+to+"', "+ticket_id+");";
 	int rs;
 	rs = st.executeUpdate(q);
+	ResultSet rs1;
 	q = "select Max(id) as maxid from booking";
-	ResultSet rs1 = st.executeQuery(q);
+	rs1 = st.executeQuery(q);
 	if (rs1.next()) {
 		return Integer.parseInt(rs1.getString("maxid"));
 		}
@@ -212,7 +240,8 @@ public int updateItinerary(String from, String to, String username, String fligh
 	
 	try {
 		
-		int booking_num = createBooking(from,to,username);
+		int booking_num = createBooking(from,to,username,flight1,flight2);
+		System.out.println(booking_num);
 		Statement st = this.connection.createStatement();
 		String q;
 		ResultSet rs;
@@ -296,6 +325,7 @@ public int updateItinerary(String from, String to, String username, String fligh
 
 public Boolean checkAvailability(String from, String to, String flight, String date) {
 	try {
+
 		int numberOfSeats = 0;
 		String q = "select seat_num from plane where id = (select aircraft_id from flight  where id =\""+ flight + "\" )";
 		Statement st = this.connection.createStatement();
@@ -310,6 +340,10 @@ public Boolean checkAvailability(String from, String to, String flight, String d
 		if (rs.next()) {
 			numberOfReservations = Integer.parseInt(rs.getString("n"));
 			}
+		
+	    
+	    
+		
 		return numberOfReservations<numberOfSeats;
 	}
 	catch(Exception e){

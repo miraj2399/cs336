@@ -66,6 +66,7 @@ public class ApplicationDB {
 	public static void main(String[] args) {
 		QueryManager query = new QueryManager();
 		System.out.println(query.checkAvailability("EWR", "LAX", "UA1600", "2023-12-12"));
+		query.updateItinerary("EWR", "LAX", "miraj", "UA1600", "UA1244", "2023-12-12");
 	}
 
 	
