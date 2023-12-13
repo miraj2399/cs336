@@ -43,7 +43,7 @@ try{
 		
 	} else if (choice.equals("Get summary of revenue")) {
 		
-		response.sendRedirect("adminGetRevenueSummary.jsp");
+		response.sendRedirect("summarrevenue.jsp");
 		
 	} else if (choice.equals("Top customer")) {
 		

@@ -45,7 +45,7 @@ You are not logged in<br/>
   <input type="radio" id="Get reservations" name="choice" value="Get reservations">
   <label for="roundtrip">Get reservations</label> <br><br>
   <input type="radio" id="Get summary of revenue" name="choice" value="Get summary of revenue">
-  <label for="roundtrip">Get summary of revenue</label> <br><br>
+  <label for="roundtrip">Get summary of revenue by customer</label> <br><br> 
   <input type="radio" id="Top customer" name="choice" value="Top customer">
   <label for="roundtrip">Top customer</label> <br><br>
   <input type="radio" id="Top active flights" name="choice" value="Top active flights">
