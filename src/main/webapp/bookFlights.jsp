@@ -15,12 +15,17 @@ String flights = request.getParameter("flights");
 String[] arrOfFlights = flights.split(",", 2);
 String username = session.getAttribute("user").toString();
 Boolean available = true;
+String flight1 = null;
+String flight2 = null;
 
 if (arrOfFlights.length==2){
+	flight1 = arrOfFlights[0];
+	flight2 = arrOfFlights[1];
 	available = available && query.checkAvailability(origin, destination, arrOfFlights[0] ,date);
 	available = available && query.checkAvailability(origin, destination, arrOfFlights[1] ,date);
 }
 else{
+		flight1 = arrOfFlights[0];
 		available = available && query.checkAvailability(origin, destination, arrOfFlights[0] ,date);
 }
 
@@ -42,6 +47,14 @@ else{
 	out.print("<h1> Cannot book due to availablity</h1>");
 	out.print("<form action='insertToWaitlist.jsp'>");
 	out.print("<button type='submit'>Add to Waitlist</button>");
+	out.print("<input type='hidden' name='"+ "flight1"+"' value='"+flight1+"'>");
+	out.print("<input type='hidden' name='"+ "date"+"' value='"+date+"'>");
+	if (flight2!=null){
+		out.print("<input type='hidden' name='"+ "flight2"+"' value='"+flight2+"'>");
+	}
+	else{
+		out.print("<input type='hidden' name='"+ "flight2"+"' value='"+"x"+"'>");
+	}
 	out.print("</form>");
 	
 	

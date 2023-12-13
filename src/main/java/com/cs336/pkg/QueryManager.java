@@ -744,6 +744,21 @@ public boolean insertToWaitlist(String username, String flight, String date) {
 }
 
 
+public boolean changeClass(String bookingid, String flightid) {
+	try {
+		Statement st = this.connection.createStatement();
+		int rs;
+		String q = "update itinerary set seat = case when seat = 0 then 1 else 0 end where booking_id='"+bookingid+"' and flight_id='"+flightid+"';";
+		rs = st.executeUpdate(q);
+		return true;
+	} catch(Exception e){
+		return false;
+	}
+}
+
+
+
+
 public ResultSet searchDirectFlight6(String origin, String destination, String dateString, String dateString2, String dateString3, String dateString4, String dateString5, String dateString6) {
 		Statement st;
 		try {

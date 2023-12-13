@@ -55,6 +55,14 @@ Welcome <%=session.getAttribute("user")%>
 </form>
 <br>
 
+<form action='EditReservation.jsp'>
+<input type='text' name='bookingid' placeholder='booking id'>
+<input type='text' name='flightid' placeholder='flight id'>
+
+<button type='submit'> Edit Reservation </button>
+</form>
+<br><br>
+
 <form action='viewUpcomingFlights.jsp'>
 <input type='hidden' name='today' id='today'>
 <button type='submit'> View Upcoming flights </button>
