@@ -15,6 +15,7 @@ String flights = request.getParameter("flights");
 String[] arrOfFlights = flights.split(",", 2);
 String username = session.getAttribute("user").toString();
 Boolean available = true;
+
 if (arrOfFlights.length==2){
 	available = available && query.checkAvailability(origin, destination, arrOfFlights[0] ,date);
 	available = available && query.checkAvailability(origin, destination, arrOfFlights[1] ,date);
@@ -39,6 +40,11 @@ out.print("<h1> Booking successful!!!!!!!!!</h1>");
 }
 else{
 	out.print("<h1> Cannot book due to availablity</h1>");
+	out.print("<form action='insertToWaitlist.jsp'>");
+	out.print("<button type='submit'>Add to Waitlist</button>");
+	out.print("</form>");
+	
+	
 }
 
 

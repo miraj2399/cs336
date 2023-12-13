@@ -1,5 +1,6 @@
 package com.cs336.pkg;
 import  java.util.*;
+import java.sql.Date;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -684,7 +685,63 @@ public ResultSet authenticate(String username, String password) {
 
 
 	}
+	
+	public boolean cancelReservation(int ticketid) {
+		try {
+			String bookingid = "";
+			Statement st = this.connection.createStatement();
+			String q = "Select id from booking where ticket_id='"+ticketid +"';";
+			ResultSet rs = st.executeQuery(q);
+			if (rs.next()) {
+				bookingid = rs.getString("id");
+			}
+			else return false;
+			
+			// delete itinerary with bookingid
+			q = "delete from itinerary where booking_id='"+bookingid+"';";
+			int rs1;
+			rs1 = st.executeUpdate(q);
+			
+			// delete booking with bookingid
+			q = "delete from booking where id='"+bookingid+"';";
+			rs1 = st.executeUpdate(q);
+			
+			// delete ticket with ticketid
+			q = "delete from ticket where id='"+ticketid+"';";
+			rs1 = st.executeUpdate(q);
+			return true;
+		} catch(Exception e) {
+			System.out.print(e);
+			return  false;
+		}
+	}
+	
+	public ResultSet getUpcomingReservations(String username, String today, boolean reverse) {
+		try {
+			Statement st = this.connection.createStatement();
+			ResultSet rs;
+			String q = "select * from itinerary i join booking b on i.booking_id=b.id join ticket t on t.id=b.ticket_id where username='"+username+"' and departs_date>='"+ today +"';";
+			if (reverse) q = "select * from itinerary i join booking b on i.booking_id=b.id join ticket t on t.id=b.ticket_id where username='"+username+"' and departs_date<'"+ today +"';";
+			rs = st.executeQuery(q);
+			return rs;
+		}
+		catch(Exception e) {
+			return null;
+		}
+		
+	}
 
+public boolean insertToWaitlist(String username, String flight, String date) {
+	try { 
+	Statement st = this.connection.createStatement();
+	int rs;
+	String q ="insert into waitlist values('"+date+"','"+flight+"','"+username+"');";
+	rs = st.executeUpdate(q);
+	return true;
+	} catch(Exception e) {
+		return false;
+	}
+}
 
 
 public ResultSet searchDirectFlight6(String origin, String destination, String dateString, String dateString2, String dateString3, String dateString4, String dateString5, String dateString6) {

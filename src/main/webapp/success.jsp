@@ -6,7 +6,7 @@
 <%@ page import="java.text.*" %>
 <!DOCTYPE html>
 
-<script type="text/javascript">
+<script type="module">
   function handleSubmit()
   {
      const origin = document.getElementById("origin").value;
@@ -16,6 +16,10 @@
      console.log(origin,destination,date,choice);
      
   }
+  var today = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
+  document.getElementById("today").value = today
+  document.getElementById("today1").value = today
+  
 </script>
 
 <%
@@ -26,6 +30,9 @@ You are not logged in<br/>
 <%} else {
 %>
 Welcome <%=session.getAttribute("user")%> 
+<%
+
+%>
   <form action="search.jsp">
   <label for="origin">From:</label><br>
   <input type="text" id="origin" name="origin" placeholder="EWR"><br>
@@ -41,7 +48,24 @@ Welcome <%=session.getAttribute("user")%>
   <input type="submit" value="Submit" onClick="handleSubmit()">
   </form>
   
+<br><br><br>
+<form action='cancelReservation.jsp'>
+<input type='text' name='ticketid' placeholder='ticekt id'>
+<button type='submit'> Cancel Reservation </button>
+</form>
 <br>
+
+<form action='viewUpcomingFlights.jsp'>
+<input type='hidden' name='today' id='today'>
+<button type='submit'> View Upcoming flights </button>
+</form>
+
+<form action='viewPastFlights.jsp'>
+<input type='hidden' name='today1' id='today1'>
+<button type='submit'> View Past flights </button>
+</form>
+
+<br><br>
 <a href='logout.jsp'>Log out</a>
 <%
 }
