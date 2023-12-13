@@ -160,6 +160,9 @@ try {
     String destination = request.getParameter("destination");
     String date  = request.getParameter("date");
     String choice = request.getParameter("choice");
+    boolean isFlexible = request.getParameter("options") != null && request.getParameter("options").equals("flexible");
+
+	    
     QueryManager query= new QueryManager();
     String htmlText = "<div id='reserve_text' data-value ='"+ choice +"'>";
     htmlText += "<form id='bookingForm' method='POST' action='bookFlights.jsp'>"; 
@@ -186,10 +189,13 @@ try {
     htmlText += "<button onClick={toggleSortByPrice()}> duration </button>";
     htmlText += "<button onClick={toggleSortByPrice()}> none </button>";
     
-    htmlText += "</div>";
-
-    ResultSet rs = query.searchDirectFlight(origin, destination, date,false);
-  
+    htmlText += "</div>"; 
+    ResultSet rs;
+    if(isFlexible) {
+    	rs = query.searchDirectFlightFlexible(origin, destination, date ,false);
+    } else {
+    	rs = query.searchDirectFlight(origin, destination, date, false);
+    }
     QueryManager query2 = new QueryManager();
     htmlText += "<div class='direct'>";
     htmlText += "<h3>Direct flights:</h3>";
@@ -235,8 +241,13 @@ try {
   
     
     if (choice.equals("roundtrip")){
-    	rs = query.searchDirectFlight(destination, origin, date,false);
     	
+    	if(isFlexible) {
+        	rs = query.searchDirectFlightFlexible(destination, origin, date,false);
+        } else {
+        	rs = query.searchDirectFlight(destination, origin, date,false);
+        }
+    	    	
         htmlText += "<div class='direct'>";
         htmlText += "<h3>Direct flights:</h3>";
         htmlText += "<ul style='list-style-type:none; padding: 0;'>";

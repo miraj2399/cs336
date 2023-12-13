@@ -6,7 +6,7 @@
 <%@ page import="java.text.*" %>
 <!DOCTYPE html>
 
-<script type="text/javascript">
+<script type="module">
   function handleSubmit()
   {
      const origin = document.getElementById("origin").value;
@@ -16,6 +16,13 @@
      console.log(origin,destination,date,choice);
      
   }
+  var today = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
+  document.getElementById("today").value = today
+  document.getElementById("today1").value = today
+
+  const flexibleCheckbox = document.getElementById("flexible");
+  const isFlexible = flexibleCheckbox.checked;
+
 </script>
 
 <%
@@ -26,16 +33,20 @@ You are not logged in<br/>
 <%} else {
 %>
 Welcome <%=session.getAttribute("user")%> 
-  
+
     <br><br>
 
   <form action="search.jsp">
+  <label for="option1">Book a flight</label> <br><br>
   <label for="origin">From:</label><br>
   <input type="text" id="origin" name="origin" placeholder="EWR"><br>
   <label for="destination">To:</label><br>
   <input type="text" id="destination" name="destination" placeholder="LAX"><br><br>
-  <input type="date" id="date" name="date"><br><br><br>
-  
+  <label for="destination">Select a date:</label><br>
+  <input type="date" id="date" name="date"><br><br>
+   <label for="option1">Flexible dates</label>
+    <input type="checkbox" id="flexible" name="options" value="flexible"> <br><br>
+   <label for="option1">Trip type:</label> <br> <br>
   <input type="radio" id="oneway" name="choice" value="oneway" checked>
   <label for="oneway">One way</label>
   <input type="radio" id="roundtrip" name="choice" value="roundtrip">
@@ -44,7 +55,26 @@ Welcome <%=session.getAttribute("user")%>
   <input type="submit" value="Submit" onClick="handleSubmit()">
   </form>
   
+<br><br><br>
+<form action='cancelReservation.jsp'>
+
+<label for="option1">About my reservations:</label> <br><br>
+<input type='text' name='ticketid' placeholder='ticket id'>
+<button type='submit'> Cancel Reservation </button>
+</form>
 <br>
+
+<form action='viewUpcomingFlights.jsp'>
+<input type='hidden' name='today' id='today'>
+<button type='submit'> View Upcoming flights </button>
+</form>
+
+<form action='viewPastFlights.jsp'>
+<input type='hidden' name='today1' id='today1'>
+<button type='submit'> View Past flights </button>
+</form>
+
+<br><br>
 <a href='logout.jsp'>Log out</a>
 <%
 }

@@ -1,5 +1,6 @@
 package com.cs336.pkg;
 import  java.util.*;
+import java.sql.Date;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -121,7 +122,47 @@ public ResultSet browseQuestions() {
 		}
 	}
 
-	public ResultSet searchDirectFlight(String origin, String destination, String dateString, Boolean sorted) {
+
+
+public ResultSet searchDirectFlightFlexible(String origin, String destination, String dateString, Boolean sorted) {
+	Statement st;
+	try {
+		System.out.print(dateString);
+		String dayOfWeekString = ConvertDateToSpecialString(dateString);
+		st = this.connection.createStatement();
+		ResultSet rs;
+		System.out.print(dayOfWeekString);
+		String q = "";
+		if(dayOfWeekString.equals("1______")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '_1_____' or day_of_week like '______1')";
+		} else if(dayOfWeekString.equals("_1_____")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '__1____' or day_of_week like '1______')";
+		} else if(dayOfWeekString.equals("__1____")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '___1___' or day_of_week like '_1_____')";
+		} else if(dayOfWeekString.equals("___1___")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '____1__' or day_of_week like '__1____')";
+		} else if(dayOfWeekString.equals("____1__")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '_____1_' or day_of_week like '___1___')";
+		} else if(dayOfWeekString.equals("_____1_")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '______1' or day_of_week like '____1__')";
+		} else if(dayOfWeekString.equals("______1")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '1______' or day_of_week like '_____1_')";
+		}
+		
+		if (sorted) {
+			q+=" order by price asc";
+		}
+		rs = st.executeQuery(q);
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+
+}
+
+public ResultSet searchDirectFlight(String origin, String destination, String dateString, Boolean sorted) {
 		Statement st;
 		try {
 			String dayOfWeekString = ConvertDateToSpecialString(dateString);
@@ -733,7 +774,63 @@ public ResultSet authenticate(String username, String password) {
 
 
 	}
+	
+	public boolean cancelReservation(int ticketid) {
+		try {
+			String bookingid = "";
+			Statement st = this.connection.createStatement();
+			String q = "Select id from booking where ticket_id='"+ticketid +"';";
+			ResultSet rs = st.executeQuery(q);
+			if (rs.next()) {
+				bookingid = rs.getString("id");
+			}
+			else return false;
+			
+			// delete itinerary with bookingid
+			q = "delete from itinerary where booking_id='"+bookingid+"';";
+			int rs1;
+			rs1 = st.executeUpdate(q);
+			
+			// delete booking with bookingid
+			q = "delete from booking where id='"+bookingid+"';";
+			rs1 = st.executeUpdate(q);
+			
+			// delete ticket with ticketid
+			q = "delete from ticket where id='"+ticketid+"';";
+			rs1 = st.executeUpdate(q);
+			return true;
+		} catch(Exception e) {
+			System.out.print(e);
+			return  false;
+		}
+	}
+	
+	public ResultSet getUpcomingReservations(String username, String today, boolean reverse) {
+		try {
+			Statement st = this.connection.createStatement();
+			ResultSet rs;
+			String q = "select * from itinerary i join booking b on i.booking_id=b.id join ticket t on t.id=b.ticket_id where username='"+username+"' and departs_date>='"+ today +"';";
+			if (reverse) q = "select * from itinerary i join booking b on i.booking_id=b.id join ticket t on t.id=b.ticket_id where username='"+username+"' and departs_date<'"+ today +"';";
+			rs = st.executeQuery(q);
+			return rs;
+		}
+		catch(Exception e) {
+			return null;
+		}
+		
+	}
 
+public boolean insertToWaitlist(String username, String flight, String date) {
+	try { 
+	Statement st = this.connection.createStatement();
+	int rs;
+	String q ="insert into waitlist values('"+date+"','"+flight+"','"+username+"');";
+	rs = st.executeUpdate(q);
+	return true;
+	} catch(Exception e) {
+		return false;
+	}
+}
 
 
 public ResultSet searchDirectFlight6(String origin, String destination, String dateString, String dateString2, String dateString3, String dateString4, String dateString5, String dateString6) {
