@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
+<script type="text/javascript">
+  function handleSubmit()
+  {
+	 const keyword = document.getElementById('query').value;
+  }
+</script>
+
 <html>
 <head>
 <meta charset="UTF-8">

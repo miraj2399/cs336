@@ -58,8 +58,8 @@ try{
 		response.sendRedirect("repAllFlightsForm.jsp");	
 		
 	} else if (choice.equals("Answer question")) {
-		QueryManager query= new QueryManager();
-		ResultSet rs = query.findQuestions();		
+		QueryManager query= new QueryManager();     
+		ResultSet rs = query.browseQuestions();		
 		String htmlText ="<h3>All questions:</h3>";
 		htmlText += "<ul>";
 		while (rs.next()) {

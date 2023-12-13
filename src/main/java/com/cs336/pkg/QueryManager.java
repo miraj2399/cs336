@@ -90,9 +90,24 @@ public String ConvertDateToSpecialString(String dateString) {
 }
     return dayOfWeekString;
 	
-}
+} 
 
-	public ResultSet findQuestions() {
+public ResultSet searchKeyword(String keyword) {
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from question where question LIKE '%" + keyword + "%' OR answer LIKE '%" + keyword + "%'");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+	
+
+public ResultSet browseQuestions() {
 		Statement st;
 		try {
 			st = this.connection.createStatement();
@@ -127,6 +142,7 @@ public String ConvertDateToSpecialString(String dateString) {
 
 	}
 
+	
 public void insertReply(String reply, String repUsername, String questionId) {
 
 	Statement st;
@@ -364,7 +380,40 @@ public ResultSet adminGetReservation(String table, String uniqueId) {
 	}
 }
 
-public ResultSet adminAllFlights(String airport) {
+
+
+
+public ResultSet customerGetPastFlights(String past, String username) {
+
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from itinerary i, booking b, ticket t where i.booking_id = b.id AND b.ticket_id = t.id AND departs_date < '" +past+ "' AND t.username = '" + username + "';");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet customerGetUpcomingFlights(String past, String username) {
+
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from itinerary i, booking b, ticket t where i.booking_id = b.id AND b.ticket_id = t.id AND departs_date > '" +past+ "' AND t.username = '" + username + "';");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet repAllFlights(String airport) {
 
 	Statement st;
 	try {
@@ -768,35 +817,26 @@ public ResultSet searchDirectFlight3(String origin, String destination, String d
 		return null;
 		}
 
-		}
+}
 
-
-
-
-
-
-
-//askQuestion(question, username)
-
-/*
 
 public void askQuestion(String question, String username) {
 
+	System.out.println("LOOK USER" +username);
+
+	System.out.println("LOOK QUESTION" +question);
 	Statement st;
 	try {
 
 		st = this.connection.createStatement();
 		int rs;
-		rs = st.executeUpdate("Insert into question(question, username) values('"+question+"'+','+'"username+"')");
+		rs = st.executeUpdate("Insert into question(customer, question) values('"+username+"', '" + question +"')");
 	} catch (SQLException e) {
-		//INSERT INTO question (customer, question) VALUES ('Adam412', 'Second question?');
-		// INTO question (customer, question) VALUES ('Adam412', 'Second question?');
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-		//return null;
 	}
 }
-*/
+
 
 public ResultSet getReservationsByFlightNumber(String flightNumber) {
 		ResultSet rs; // Declare ResultSet without assigning a value
@@ -823,10 +863,8 @@ public ResultSet ReservationsFlight(String flightNumber) {
 
 		ResultSet rs = null;
 		try {
-		String query = "SELECT booking_id, flight_id, departs_date, arrives_date, seat_no, class, plane_id " +
-		"FROM Itinerary " +
-		"WHERE flight_id = ?";
-		System.out.println(query); // Debug: Print query
+		String query = "SELECT booking_id, flight_id, departs_date, arrives_date, seat_no, class, plane_id FROM Itinerary WHERE flight_id = ?";
+		System.out.println(query); 
 
 		PreparedStatement pst = this.connection.prepareStatement(query);
 		pst.setString(1, flightNumber);
@@ -871,10 +909,19 @@ public ResultSet getTicketsWithMaxFare() {
 		ResultSet rs = null; // Declare ResultSet without assigning a value
 		try {
 		// Prepare SQL query to find the ticket(s) with the maximum fare
-		String query = "SELECT username, total_fare " +
-		"FROM ticket t " +
-		"WHERE t.total_fare = (SELECT MAX(total_fare) FROM ticket)";
-
+		
+		String query = "SELECT username, SUM(total_fare) as total_fare " +
+                "FROM ticket " +
+                "GROUP BY username " +
+                "HAVING SUM(total_fare) = ( " +
+                "    SELECT MAX(total_revenue) " +
+                "    FROM ( " +
+                "        SELECT SUM(total_fare) as total_revenue " +
+                "        FROM ticket " +
+                "        GROUP BY username " +
+                "    ) as revenue " +
+                ")";
+		
 		System.out.println(query); // Print the query for debugging purposes
 
 		PreparedStatement pst = this.connection.prepareStatement(query);

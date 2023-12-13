@@ -19,9 +19,10 @@
 
             ResultSet rs = queryManager.ReservationsFlight(flightNumber);
             if (rs == null) { 
-            	out.print("yolo");
+            	out.print("There is no reservations for this flight");
             }
             if (rs != null) {
+            	out.println("<h1>All Reservations for the flight: " + flightNumber + " </h1><br>");
                 while (rs.next()) {
                     int bookingId = rs.getInt(1); // Assuming the first column in the result set is the booking ID
                     String flight_id = rs.getString(2);
@@ -30,7 +31,7 @@
                     int seat_no = rs.getInt(5);
                     int c = rs.getInt(6);
                     int plane_id = rs.getInt(7);
-
+                    
                     out.println("<p>Booking ID: " + bookingId + ", Flight ID: " + flight_id + ", Departs Date: " + departs_date + ", Arrive Date: " + arrives_date + ", Seat Number: " + seat_no + ", Class: " + c + ", Plane Id: " + plane_id + "</p>");
                 }
                 rs.close();

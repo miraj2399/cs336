@@ -26,6 +26,9 @@ You are not logged in<br/>
 <%} else {
 %>
 Welcome <%=session.getAttribute("user")%> 
+  
+    <br><br>
+
   <form action="search.jsp">
   <label for="origin">From:</label><br>
   <input type="text" id="origin" name="origin" placeholder="EWR"><br>

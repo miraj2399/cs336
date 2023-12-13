@@ -15,7 +15,7 @@ if (rs.next()) {
 	session.setAttribute("user", username); // the username will be stored in the session
 	out.println("welcome " + username);
 	out.println("<a href='logout.jsp'>Log out</a>");
-	response.sendRedirect("success.jsp");
+	response.sendRedirect("customerHome.jsp");
 } else if(query.checkIfCustomerRep(username, pwd).next()) {
 	rs = query.checkIfCustomerRep(username,pwd);
 	session.setAttribute("user", username); // the username will be stored in the session

@@ -57,34 +57,17 @@
 
 <% 
 try{
-	String airport = request.getParameter("airport");
-
-	
-		QueryManager query= new QueryManager();
-		ResultSet rs = query.repAllFlights(airport);
-		String htmlText = "";
-	    QueryManager query2 = new QueryManager();
-	    htmlText += "<div class='direct'>";
-	    htmlText += "<h3>Direct flights:</h3>";
-	    htmlText += "<ul style='list-style-type:none; padding: 0;'>";
-		while(rs.next()) {
-		    htmlText += "<li class='flight-item'>";
-	        htmlText += "Flight ID: " + rs.getString("id") + "<br>";
-	        htmlText += "Departs: " + rs.getString("departing_time") + "<br>";
-	        htmlText += "Arrives: " + rs.getString("arriving_time") + "<br>";
-	        htmlText += "Price: " + rs.getString("price");
-	        String address = query2.getAddressOfAirport(airport);
-	        htmlText += "To <a href='//maps.google.com/?q="+ address + "'>"+ rs.getString("departing_airport") +"</a>";
-	        address = query2.getAddressOfAirport(airport);
-	        htmlText += "To <a href='//maps.google.com/?q="+ address + "'>"+ rs.getString("arriving_airport") +"</a>";
-	        
-	        htmlText += "<button class='book-button' id='"+rs.getString("id")+"' onclick='selectFlight(\"" + rs.getString("id") + "\")'>select</button>";
-	        htmlText += "</li>";
-		} 
-		htmlText += "</ul>";
-	    htmlText += "</div>";
-		out.println(htmlText);
-		
+	String choice = request.getParameter("choice");
+	String repUsername = request.getParameter("repUsername");
+	String htmlText = "";
+	ResultSet rs;
+	if(choice.equals("browse")) {
+		response.sendRedirect("browsefile.jsp?username="+repUsername);
+	} else if (choice.equals("search")) {
+		response.sendRedirect("searchfile.jsp?username="+repUsername);
+	} else if (choice.equals("post")) {
+		response.sendRedirect("postfile.jsp?username="+repUsername);
+	}	
 	
 }
 catch(Exception e){
