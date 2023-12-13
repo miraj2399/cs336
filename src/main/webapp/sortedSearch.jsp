@@ -188,7 +188,7 @@ try {
     
     htmlText += "</div>";
 
-    ResultSet rs = query.searchDirectFlight(origin, destination, date,false);
+    ResultSet rs = query.searchDirectFlight(origin, destination, date,true);
 
     htmlText += "<div class='direct'>";
     htmlText += "<h3>Direct flights:</h3>";
@@ -230,7 +230,7 @@ try {
   
     
     if (choice.equals("roundtrip")){
-    	rs = query.searchDirectFlight(destination, origin, date,false);
+    	rs = query.searchDirectFlight(destination, origin, date,true);
     	
         htmlText += "<div class='direct'>";
         htmlText += "<h3>Direct flights:</h3>";
@@ -277,134 +277,3 @@ catch(Exception e) {
     out.println(e);
 }
 %>
-
-<%--
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
-<%@ page import="java.text.*" %>
-<!DOCTYPE html>
-
-<script type="text/javascript">
-
-var selectedFlights = [];
-function selectFlight(flight){
-	selectedFlights.includes(flight)?selectedFlights=selectedFlights.filter((id)=>{return id!=flight}):selectedFlights.push(flight);
-	console.log(selectedFlights);
-	changeButtonText(flight);
-	const reserve_section = document.getElementById("reserve_text");
-	const type = reserve_section.getAttribute("data-value")
-	console.log(type);
-	const reserveButton = document.createElement('button');
-	reserveButton.textContent = 'Book now! ';
-	
-	
-	if (type=="oneway" && selectedFlights.length==1) {
-		reserve_section.appendChild(reserveButton);
-	}
-	else if (type=="roundtrip" && selectedFlights.length==2) {
-		reserve_section.appendChild(reserveButton);
-	}
-	else{
-		reserve_section.innerHTML="";
-}
-}
-function changeButtonText(buttonid){
-	document.getElementById(buttonid).innerHTML =="select"?document.getElementById(buttonid).innerHTML ="UNSELECT": document.getElementById(buttonid).innerHTML ="select";
-}
-
-
-</script>
-
-<% 
-try{
-	
-	String origin = request.getParameter("origin");
-	String destination = request.getParameter("destination");
-	String date  = request.getParameter("date");
-	String date2  = request.getParameter("date2");
-	String date3  = request.getParameter("date3");
-	String date4  = request.getParameter("date4");
-	String date5  = request.getParameter("date5");
-	String date6  = request.getParameter("date6");
-	String choice = request.getParameter("choice");
-	QueryManager query= new QueryManager();
-	out.println("<div id='reserve_text' data-value ='"+ choice +"'></div");
-	out.println("<h1>Flight from: "+ origin + " to "+destination+"</h1>");
-	ResultSet rs = null;
-	if(date6 != null) {
-		 rs = query.searchDirectFlight6(origin,destination,date, date2, date3, date4, date5, date6);
-	} else if(date5 != null) {
-		 rs = query.searchDirectFlight5(origin,destination,date, date2, date3, date4, date5);
-	} else if(date4 != null) {
-		 rs = query.searchDirectFlight4(origin,destination,date, date2, date3, date4);
-	} else if(date3 != null) {
-		 rs = query.searchDirectFlight3(origin,destination,date, date2, date3);
-	} else if(date2 != null) {
-		 rs = query.searchDirectFlight2(origin,destination,date, date2);
-	} else {
-		 rs = query.searchDirectFlight(origin,destination,date);
-	}
-	String htmlText ="<h3>Direct flights:</h3>";
-	htmlText += "<ul>";
-	while (rs.next()) {
-		if(date6 != null) {
-			htmlText = htmlText+ "<li> Flight id: "+rs.getString("id") + ", departs at " + rs.getString("departing_time")+ ", arrives at "+ rs.getString("arriving_time")+"<h5> Price: "+rs.getString("price")+"</h5>"+"<button  value='"+rs.getString("id") +"' id='"+rs.getString("id")+"' onClick='{selectFlight(this.value)} '>select</button><br><br>";
-		} else if(date5 != null) {
-			htmlText = htmlText+ "<li> Flight id: "+rs.getString("id") + ", departs at " + rs.getString("departing_time")+ ", arrives at "+ rs.getString("arriving_time")+"<h5> Price: "+rs.getString("price")+"</h5>"+"<button  value='"+rs.getString("id") +"' id='"+rs.getString("id")+"' onClick='{selectFlight(this.value)} '>select</button><br><br>";
-		} else if(date4 != null) {
-			htmlText = htmlText+ "<li> Flight id: "+rs.getString("id") + ", departs at " + rs.getString("departing_time")+ ", arrives at "+ rs.getString("arriving_time")+"<h5> Price: "+rs.getString("price")+"</h5>"+"<button  value='"+rs.getString("id") +"' id='"+rs.getString("id")+"' onClick='{selectFlight(this.value)} '>select</button><br><br>";
-
-		} else if(date3 != null) {
-			htmlText = htmlText+ "<li> Flight id: "+rs.getString("id") + ", departs at " + rs.getString("departing_time")+ ", arrives at "+ rs.getString("arriving_time")+"<h5> Price: "+rs.getString("price")+"</h5>"+"<button  value='"+rs.getString("id") +"' id='"+rs.getString("id")+"' onClick='{selectFlight(this.value)} '>select</button><br><br>";
-		} else if(date2 != null) {
-			htmlText = htmlText+ "<li> Flight id: "+rs.getString("id") + ", departs at " + rs.getString("departing_time")+ ", arrives at "+ rs.getString("arriving_time")+"<h5> Price: "+rs.getString("price")+"</h5>"+"<button  value='"+rs.getString("id") +"' id='"+rs.getString("id")+"' onClick='{selectFlight(this.value)} '>select</button><br><br>";
-		} else {
-			 rs = query.searchDirectFlight(origin,destination,date);
-		}
-		htmlText = htmlText+ "<li> Flight id: "+rs.getString("id") + ", departs at " + rs.getString("departing_time")+ ", arrives at "+ rs.getString("arriving_time")+"<h5> Price: "+rs.getString("price")+"</h5>"+"<button  value='"+rs.getString("id") +"' id='"+rs.getString("id")+"' onClick='{selectFlight(this.value)} '>select</button><br><br>";
-	}
-	htmlText += "</ul>";
-	out.println(htmlText);
-	htmlText  = "";
-	
-	rs = query.searchOneTransitFlight(origin,destination,date);
-	
-	htmlText ="<h3>Flight with one  Transit:</h3>";
-	htmlText += "<ul>";/	while (rs.next()) htmlText = htmlText+ "<li> Start with flight: "+rs.getString("f1") + ", Departs at " + rs.getString("f1_departs_at")+ ", Arrives at "+ rs.getString("f1_arrives_at") +
-			" on "+ rs.getString("connecting") + " airport." + " Then take flight " + rs.getString("f2") + " departing at " + rs.getString("f2_departs_at") + " and by " + rs.getString("f2_arrives_at") + " you will be at your destination."+"<br><button>book</button><br><br>";
-
-	htmlText += "</ul>";
-	out.println(htmlText);
-	htmlText  = "";
-	
-	if (choice.equals("roundtrip")){
-		out.println("<h1>Flight from: "+ destination + " to "+origin+"</h1>");
-		rs = query.searchDirectFlight(destination,origin,date);
-		htmlText ="<h3>Direct flights:</h3>";
-		htmlText += "<ul>";
-		while (rs.next()) htmlText = htmlText+ "<li> Flight id: "+rs.getString("id") + ", departs at " + rs.getString("departing_time")+ ", arrives at "+ rs.getString("arriving_time")+"<h5> Price: "+rs.getString("price")+"</h5>"+"<button>book</button><br><br>";
-		htmlText += "</ul>";
-		out.println(htmlText);
-		htmlText  = "";
-		
-		rs = query.searchOneTransitFlight(destination,origin,date);
-		
-		htmlText ="<h3>Flight with one  Transit:</h3>";
-		htmlText += "<ul>";
-		while (rs.next()) htmlText = htmlText+ "<li> Start with flight: "+rs.getString("f1") + ", Departs at " + rs.getString("f1_departs_at")+ ", Arrives at "+ rs.getString("f1_arrives_at") +
-				" on "+ rs.getString("connecting") + " airport." + " Then take flight " + rs.getString("f2") + " departing at " + rs.getString("f2_departs_at") + " and by " + rs.getString("f2_arrives_at") + " you will be at your destination."+"<br><button>book</button><br><br>";
-		htmlText += "</ul>";
-		out.println(htmlText);
-		
-		out.println("<button onclick=jasminButton()'>JASMINBUTTON</button>");
-	}
-}
-catch(Exception e){
-	out.println("something went wrong");
-	out.println(e);
-}
-
-%>
---%>

@@ -38,7 +38,7 @@ public class ApplicationDB {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "rootroot");
+			connection = DriverManager.getConnection(connectionUrl,"root", "harmit10");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,7 +62,7 @@ public class ApplicationDB {
 	
 	
 	
-	
+	/*
 	public static void main(String[] args) {
 		String dateString = "2023-12-06"; // Example date string
 
@@ -83,8 +83,13 @@ public class ApplicationDB {
         System.out.println("Day of Week (String): " + dayOfWeekString);
 
 	}
+	*/
 
-	
+	public static void main(String[] args) {
+		QueryManager query = new QueryManager(); 
+		query.ReservationsFlight("WN111");
+		
 	
 
+}
 }
