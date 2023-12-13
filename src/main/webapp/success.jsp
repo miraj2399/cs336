@@ -22,7 +22,6 @@
 
   const flexibleCheckbox = document.getElementById("flexible");
   const isFlexible = flexibleCheckbox.checked;
-
 </script>
 
 <%
@@ -33,9 +32,9 @@ You are not logged in<br/>
 <%} else {
 %>
 Welcome <%=session.getAttribute("user")%> 
+<%
 
-    <br><br>
-
+%>
   <form action="search.jsp">
   <label for="option1">Book a flight</label> <br><br>
   <label for="origin">From:</label><br>
@@ -57,12 +56,18 @@ Welcome <%=session.getAttribute("user")%>
   
 <br><br><br>
 <form action='cancelReservation.jsp'>
-
-<label for="option1">About my reservations:</label> <br><br>
-<input type='text' name='ticketid' placeholder='ticket id'>
+<input type='text' name='ticketid' placeholder='ticekt id'>
 <button type='submit'> Cancel Reservation </button>
 </form>
 <br>
+
+<form action='EditReservation.jsp'>
+<input type='text' name='bookingid' placeholder='booking id'>
+<input type='text' name='flightid' placeholder='flight id'>
+
+<button type='submit'> Edit Reservation </button>
+</form>
+<br><br>
 
 <form action='viewUpcomingFlights.jsp'>
 <input type='hidden' name='today' id='today'>

@@ -91,7 +91,7 @@ public String ConvertDateToSpecialString(String dateString) {
 }
     return dayOfWeekString;
 	
-} 
+}
 
 public ResultSet searchKeyword(String keyword) {
 	Statement st;
@@ -106,7 +106,7 @@ public ResultSet searchKeyword(String keyword) {
 		return null;
 	}
 }
-	
+
 
 public ResultSet browseQuestions() {
 		Statement st;
@@ -148,7 +148,7 @@ public ResultSet searchDirectFlightFlexible(String origin, String destination, S
 		} else if(dayOfWeekString.equals("______1")) {
 			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '1______' or day_of_week like '_____1_')";
 		}
-		
+
 		if (sorted) {
 			q+=" order by price asc";
 		}
@@ -183,7 +183,7 @@ public ResultSet searchDirectFlight(String origin, String destination, String da
 
 	}
 
-	
+
 public void insertReply(String reply, String repUsername, String questionId) {
 
 	Statement st;
@@ -774,7 +774,7 @@ public ResultSet authenticate(String username, String password) {
 
 
 	}
-	
+
 	public boolean cancelReservation(int ticketid) {
 		try {
 			String bookingid = "";
@@ -785,16 +785,16 @@ public ResultSet authenticate(String username, String password) {
 				bookingid = rs.getString("id");
 			}
 			else return false;
-			
+
 			// delete itinerary with bookingid
 			q = "delete from itinerary where booking_id='"+bookingid+"';";
 			int rs1;
 			rs1 = st.executeUpdate(q);
-			
+
 			// delete booking with bookingid
 			q = "delete from booking where id='"+bookingid+"';";
 			rs1 = st.executeUpdate(q);
-			
+
 			// delete ticket with ticketid
 			q = "delete from ticket where id='"+ticketid+"';";
 			rs1 = st.executeUpdate(q);
@@ -804,7 +804,7 @@ public ResultSet authenticate(String username, String password) {
 			return  false;
 		}
 	}
-	
+
 	public ResultSet getUpcomingReservations(String username, String today, boolean reverse) {
 		try {
 			Statement st = this.connection.createStatement();
@@ -817,11 +817,37 @@ public ResultSet authenticate(String username, String password) {
 		catch(Exception e) {
 			return null;
 		}
-		
+
 	}
 
 public boolean insertToWaitlist(String username, String flight, String date) {
-	try { 
+	try {
+	Statement st = this.connection.createStatement();
+	int rs;
+	String q ="insert into waitlist values('"+date+"','"+flight+"','"+username+"');";
+	rs = st.executeUpdate(q);
+	return true;
+	} catch(Exception e) {
+		return false;
+	}
+}
+
+
+public boolean changeClass(String bookingid, String flightid) {
+	try {
+		Statement st = this.connection.createStatement();
+		int rs;
+		String q = "update itinerary set seat = case when seat = 0 then 1 else 0 end where booking_id='"+bookingid+"' and flight_id='"+flightid+"';";
+		rs = st.executeUpdate(q);
+		return true;
+	} catch(Exception e){
+		return false;
+	}
+}
+
+
+public boolean insertToWaitlist(String username, String flight, String date) {
+	try {
 	Statement st = this.connection.createStatement();
 	int rs;
 	String q ="insert into waitlist values('"+date+"','"+flight+"','"+username+"');";
@@ -919,9 +945,6 @@ public ResultSet searchDirectFlight3(String origin, String destination, String d
 
 public void askQuestion(String question, String username) {
 
-	System.out.println("LOOK USER" +username);
-
-	System.out.println("LOOK QUESTION" +question);
 	Statement st;
 	try {
 
@@ -961,7 +984,7 @@ public ResultSet ReservationsFlight(String flightNumber) {
 		ResultSet rs = null;
 		try {
 		String query = "SELECT booking_id, flight_id, departs_date, arrives_date, seat_no, class, plane_id FROM Itinerary WHERE flight_id = ?";
-		System.out.println(query); 
+		System.out.println(query);
 
 		PreparedStatement pst = this.connection.prepareStatement(query);
 		pst.setString(1, flightNumber);
@@ -1006,7 +1029,7 @@ public ResultSet getTicketsWithMaxFare() {
 		ResultSet rs = null; // Declare ResultSet without assigning a value
 		try {
 		// Prepare SQL query to find the ticket(s) with the maximum fare
-		
+
 		String query = "SELECT username, SUM(total_fare) as total_fare " +
                 "FROM ticket " +
                 "GROUP BY username " +
@@ -1018,7 +1041,7 @@ public ResultSet getTicketsWithMaxFare() {
                 "        GROUP BY username " +
                 "    ) as revenue " +
                 ")";
-		
+
 		System.out.println(query); // Print the query for debugging purposes
 
 		PreparedStatement pst = this.connection.prepareStatement(query);

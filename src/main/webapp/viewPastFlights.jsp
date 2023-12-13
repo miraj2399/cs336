@@ -25,6 +25,9 @@ while(rs.next()){
 	out.println(s+rs.getString("booking_id") + "<br>");
 	s = "ticket id: ";
 	out.println(s+rs.getString("ticket_id") + "<br>");
+	s = "class: ";
+	String classValue = rs.getString("class").equals("1")?"business":"economy";
+	out.println(s+ classValue + "<br>");
 	out.println("</li><br><br><br>");
 }
 out.println("</ul>");
