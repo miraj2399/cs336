@@ -31,7 +31,7 @@ You are not logged in<br/>
 %>
 
   <form  action="repAction.jsp">
-<label id="repUsername" data-value='<%= repUsername %>'>Welcome Customer Representative <%=session.getAttribute("user")%></label> <br><br>
+<label id="repUsername" data-value='<%= repUsername %>'>Welcome Customer Representative: <%=session.getAttribute("user")%></label> <br><br>
 
   <input type='hidden' name="repUsername" value='<%= repUsername %>'><br><br>
   <input type="radio" id="Book flight" name="choice" value="Book flight" checked>

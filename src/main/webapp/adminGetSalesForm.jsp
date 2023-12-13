@@ -9,6 +9,8 @@
   function handleSubmit()
   {
      const month = document.getElementById("month").value;
+     const month = document.getElementById("year").value;
+
      console.log(month);
      
   }
@@ -23,8 +25,10 @@ You are not logged in<br/>
 %>
 <%=session.getAttribute("user")%>, please type a month (first three characters only): 
   <form action="adminGetSalesQuery.jsp">
-  <label for="origin">Type the first 3 characters of the month:</label><br>
-  <input type="text" id="month" name="month" placeholder="customer or custRep"><br> 
+  <label for="origin">Type the month (Ex: 1,2,3,4,5,6,7,8,9,10,11,12):</label><br>
+  <input type="text" id="month" name="month" placeholder="month"><br> 
+  <label for="origin">Type the year (Ex: 2023, 2021):</label><br>
+  <input type="text" id="year" name="year" placeholder="year"><br> 
   <input type="submit" value="Submit" onClick="handleSubmit()">
   </form>
   

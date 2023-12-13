@@ -34,12 +34,12 @@ You are not logged in<br/>
 <label id="repUsername" data-value='<%= repUsername  %>'>Welcome Admin user: <%=session.getAttribute("user")%></label> <br><br>
 
   <input type='hidden' name="repUsername" value='<%= repUsername %>'><br><br>
-  <input type="radio" id="Add customer representative" name="choice" value="Add customer representative" checked>
+  <input type="radio" id="Add customer/customer representative" name="choice" value="Add customer representative" checked>
   <label for="oneway">Add customer representative</label> <br><br>
-  <input type="radio" id="Delete customer representative" name="choice" value="Delete customer representative">
-  <label for="roundtrip">Delete customer representative</label> <br><br>
-  <input type="radio" id="Edit customer representative" name="choice" value="Edit customer representative">
+  <input type="radio" id="Edit customer/customer representative" name="choice" value="Edit customer representative">
   <label for="roundtrip">Edit customer representative</label> <br><br>
+  <input type="radio" id="Delete customer/customer representative" name="choice" value="Delete customer representative">
+  <label for="roundtrip">Delete customer representative</label> <br><br>
   <input type="radio" id="Get Sales" name="choice" value="Get Sales">
   <label for="roundtrip">Get Sales</label> <br><br>
   <input type="radio" id="Get reservations" name="choice" value="Get reservations">

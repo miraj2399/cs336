@@ -8,11 +8,20 @@
 <% 
 try{
 	String month = request.getParameter("month");
+	String year = request.getParameter("year");
+
 	
 		QueryManager query= new QueryManager();
-		ResultSet rs = query.adminGetMonthSales(month);	
-		out.println("sucessfully got the month's sales!");
-		response.sendRedirect("adminLanding.jsp");
+		ResultSet rs = query.adminGetMonthSales(month, year);
+		String htmlText = "";
+		if (rs.next()) {
+		    double totalRevenue = rs.getDouble("Total_Revenue");
+		    htmlText = htmlText + "<li> The revenue for the month " + month + ", and the year " + year + " is: $" + totalRevenue;
+		} else {
+		    htmlText = htmlText + "<li> No data available for " + month + ", " + year;
+		}
+		out.println(htmlText);
+		
 	
 }
 catch(Exception e){

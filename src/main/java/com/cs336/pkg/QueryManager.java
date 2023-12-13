@@ -7,6 +7,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import com.mysql.jdbc.PreparedStatement;
+
 import java.time.DayOfWeek;
 
 public class QueryManager {
@@ -357,22 +360,22 @@ public ResultSet adminGetReservation(String table, String uniqueId) {
 	}
 }
 
-public ResultSet adminGetMonthSales(String month) {
-	
-	//NEED TO FAKE
-	
-	Statement st;
-	try {
-		st = this.connection.createStatement();
-		ResultSet rs;
-		rs = st.executeQuery("select * from custRep");
-		return rs;
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return null;
+
+public ResultSet adminGetMonthSales(String monthString, String year) {
+	   Statement st;
+	   int monthNum = Integer.parseInt(monthString);
+       int yearNum = Integer.parseInt(year);
+		try {
+			st = this.connection.createStatement();
+			ResultSet rs;
+			rs = st.executeQuery("SELECT SUM(total_fare) AS Total_Revenue FROM ticket Where MONTH(date_purchased) = " + monthString + " AND Year(date_purchased) = " + year);
+	       // Convert the month string to an integer
+	       	   return rs;
+	   } catch (SQLException e) {
+	       e.printStackTrace();
+	       return null;
+	   }
 	}
-}
 
 public void adminEditRep(String table, String username, String firstname) {
 	Statement st;
