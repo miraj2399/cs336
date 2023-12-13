@@ -51,7 +51,11 @@ try{
 		
 	} else if (choice.equals("Delete info to flights")) {
 		
-		response.sendRedirect("repDeleteFlightForm.jsp");	  
+		response.sendRedirect("repDeleteFlightForm.jsp");	
+		
+	} else if (choice.equals("allFlights")) {
+		
+		response.sendRedirect("repAllFlightsForm.jsp");	
 		
 	} else if (choice.equals("Answer question")) {
 		QueryManager query= new QueryManager();

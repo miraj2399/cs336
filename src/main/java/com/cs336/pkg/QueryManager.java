@@ -364,6 +364,20 @@ public ResultSet adminGetReservation(String table, String uniqueId) {
 	}
 }
 
+public ResultSet adminAllFlights(String airport) {
+
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from flight where arriving_airport='" +airport+ "' OR departing_airport='" + airport + "';");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
 
 public ResultSet adminGetMonthSales(String monthString, String year) {
 	   Statement st;
