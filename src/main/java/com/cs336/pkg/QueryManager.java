@@ -39,7 +39,7 @@ public Connection getConnection() {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "Lemonsoda123!");
+			connection = DriverManager.getConnection(connectionUrl,"root", "rootroot");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -754,6 +754,35 @@ public ResultSet authenticate(String username, String password) {
 			return false;
 		}
 	}
+	public Boolean checkAvailabilityAlert(String flight, String date) {
+		try {
+
+			int numberOfSeats = 0;
+			String q = "select seat_num from plane where id = (select aircraft_id from flight  where id =\""+ flight + "\" )";
+			Statement st = this.connection.createStatement();
+			ResultSet rs ;
+			rs = st.executeQuery(q);
+			if (rs.next()) {
+				numberOfSeats = Integer.parseInt(rs.getString("seat_num"));
+			}
+			int numberOfReservations = 0;
+			q= " select count(*) as n from itinerary where flight_id=\""+flight+"\" and departs_date = '"+date+"';";
+			rs = st.executeQuery(q);
+			if (rs.next()) {
+				numberOfReservations = Integer.parseInt(rs.getString("n"));
+			}
+
+
+
+
+			return numberOfReservations<numberOfSeats;
+		}
+		catch(Exception e){
+			System.out.print(e);
+			return false;
+		}
+	}
+
 
 	public String getAddressOfAirport(String airport) {
 

@@ -19,15 +19,20 @@
 	    const repUsername = document.getElementById('repUsername').getAttribute('data-value');
 	    
   }
+ 
 </script>
 
 <%
 String repUsername = (String) session.getAttribute("user");
 if ((session.getAttribute("user") == null)) {
+	
 %>
 You are not logged in<br/>
 <a href="login.jsp">Please Login</a>
 <%} else {
+	if ((session.getAttribute("user").toString().equals("pdawg"))){
+		out.print(" <script>if(localStorage.getItem('signInCount')=='0'){alert('Flight UA1600 for 2023-12-25 is avialable now! Youre getting this alert as youre in the waitlist. Book soon!!!!!');}localStorage.setItem('signInCount', localStorage.getItem('signInCount') ? Number(localStorage.getItem('signInCount')) + 1 : 0);</script>");
+	}
 %>
 
   <form  action="customerAction.jsp">
