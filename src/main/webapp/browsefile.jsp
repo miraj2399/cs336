@@ -1,5 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%@ page import="java.text.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,32 +11,35 @@
 </head>
 <body>
 
-<h1>Browse Questions and Answers</h1>
-
 <%
-    // Sample questions and answers
-    class QuestionAnswer {
-        String question;
-        String answer;
+String username = request.getParameter("username");
 
-        public QuestionAnswer(String question, String answer) {
-            this.question = question;
-            this.answer = answer;
-        }
-    }
+out.println("<h1>Welcome " + username + "</h1>");
 
-    QuestionAnswer[] qaList = {
-        new QuestionAnswer("What is the capital of France?", "The capital of France is Paris."),
-        new QuestionAnswer("How does photosynthesis work?", "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize nutrients from carbon dioxide and water."),
-        new QuestionAnswer("Who wrote 'Romeo and Juliet'?", "William Shakespeare wrote 'Romeo and Juliet'.")
-        // Add more questions and answers as needed
-    };
+out.println("<h2>Browse Questions and Answers</h2>");
 
-    for (QuestionAnswer qa : qaList) {
-        out.println("<p><strong>Question:</strong> " + qa.question + "</p>");
-        out.println("<p><strong>Answer:</strong> " + qa.answer + "</p>");
-        out.println("<hr>");
-    }
+try{
+				
+		QueryManager query= new QueryManager();
+		ResultSet rs = query.browseQuestions();
+		while(rs.next()) {
+			
+			out.println("<p><strong>Question:</strong> " + rs.getString("question") + "</p>");
+	       	if(rs.getString("answer") == null) {
+	       		out.println("<p><strong>Answer:</strong> Not Answered</p>");
+	       	} else {
+				out.println("<p><strong>Answer:</strong> " + rs.getString("answer") + "</p>");
+	       	}
+	        out.println("<hr>");
+			
+		}
+		
+}
+catch(Exception e){
+	out.println("something went wrong");
+	out.println(e);
+}
+
 %>
 
 </body>

@@ -39,7 +39,7 @@ public Connection getConnection() {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "rootroot");
+			connection = DriverManager.getConnection(connectionUrl,"root", "Lemonsoda123!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -93,7 +93,22 @@ public String ConvertDateToSpecialString(String dateString) {
 	
 }
 
-	public ResultSet findQuestions() {
+public ResultSet searchKeyword(String keyword) {
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from question where question LIKE '%" + keyword + "%' OR answer LIKE '%" + keyword + "%'");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+
+public ResultSet browseQuestions() {
 		Statement st;
 		try {
 			st = this.connection.createStatement();
@@ -107,7 +122,47 @@ public String ConvertDateToSpecialString(String dateString) {
 		}
 	}
 
-	public ResultSet searchDirectFlight(String origin, String destination, String dateString, Boolean sorted) {
+
+
+public ResultSet searchDirectFlightFlexible(String origin, String destination, String dateString, Boolean sorted) {
+	Statement st;
+	try {
+		System.out.print(dateString);
+		String dayOfWeekString = ConvertDateToSpecialString(dateString);
+		st = this.connection.createStatement();
+		ResultSet rs;
+		System.out.print(dayOfWeekString);
+		String q = "";
+		if(dayOfWeekString.equals("1______")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '_1_____' or day_of_week like '______1')";
+		} else if(dayOfWeekString.equals("_1_____")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '__1____' or day_of_week like '1______')";
+		} else if(dayOfWeekString.equals("__1____")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '___1___' or day_of_week like '_1_____')";
+		} else if(dayOfWeekString.equals("___1___")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '____1__' or day_of_week like '__1____')";
+		} else if(dayOfWeekString.equals("____1__")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '_____1_' or day_of_week like '___1___')";
+		} else if(dayOfWeekString.equals("_____1_")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '______1' or day_of_week like '____1__')";
+		} else if(dayOfWeekString.equals("______1")) {
+			 q = "select * from flight where arriving_airport='"+destination +"' and departing_airport='"+origin+"'" + " and (day_of_week like '"+dayOfWeekString+"'" +" or day_of_week like '1______' or day_of_week like '_____1_')";
+		}
+
+		if (sorted) {
+			q+=" order by price asc";
+		}
+		rs = st.executeQuery(q);
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+
+}
+
+public ResultSet searchDirectFlight(String origin, String destination, String dateString, Boolean sorted) {
 		Statement st;
 		try {
 			String dayOfWeekString = ConvertDateToSpecialString(dateString);
@@ -127,6 +182,7 @@ public String ConvertDateToSpecialString(String dateString) {
 		}
 
 	}
+
 
 public void insertReply(String reply, String repUsername, String questionId) {
 
@@ -365,7 +421,40 @@ public ResultSet adminGetReservation(String table, String uniqueId) {
 	}
 }
 
-public ResultSet adminAllFlights(String airport) {
+
+
+
+public ResultSet customerGetPastFlights(String past, String username) {
+
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from itinerary i, booking b, ticket t where i.booking_id = b.id AND b.ticket_id = t.id AND departs_date < '" +past+ "' AND t.username = '" + username + "';");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet customerGetUpcomingFlights(String past, String username) {
+
+	Statement st;
+	try {
+		st = this.connection.createStatement();
+		ResultSet rs;
+		rs = st.executeQuery("select * from itinerary i, booking b, ticket t where i.booking_id = b.id AND b.ticket_id = t.id AND departs_date > '" +past+ "' AND t.username = '" + username + "';");
+		return rs;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public ResultSet repAllFlights(String airport) {
 
 	Statement st;
 	try {
@@ -685,7 +774,7 @@ public ResultSet authenticate(String username, String password) {
 
 
 	}
-	
+
 	public boolean cancelReservation(int ticketid) {
 		try {
 			String bookingid = "";
@@ -696,16 +785,16 @@ public ResultSet authenticate(String username, String password) {
 				bookingid = rs.getString("id");
 			}
 			else return false;
-			
+
 			// delete itinerary with bookingid
 			q = "delete from itinerary where booking_id='"+bookingid+"';";
 			int rs1;
 			rs1 = st.executeUpdate(q);
-			
+
 			// delete booking with bookingid
 			q = "delete from booking where id='"+bookingid+"';";
 			rs1 = st.executeUpdate(q);
-			
+
 			// delete ticket with ticketid
 			q = "delete from ticket where id='"+ticketid+"';";
 			rs1 = st.executeUpdate(q);
@@ -715,7 +804,7 @@ public ResultSet authenticate(String username, String password) {
 			return  false;
 		}
 	}
-	
+
 	public ResultSet getUpcomingReservations(String username, String today, boolean reverse) {
 		try {
 			Statement st = this.connection.createStatement();
@@ -728,11 +817,11 @@ public ResultSet authenticate(String username, String password) {
 		catch(Exception e) {
 			return null;
 		}
-		
+
 	}
 
 public boolean insertToWaitlist(String username, String flight, String date) {
-	try { 
+	try {
 	Statement st = this.connection.createStatement();
 	int rs;
 	String q ="insert into waitlist values('"+date+"','"+flight+"','"+username+"');";
@@ -757,6 +846,17 @@ public boolean changeClass(String bookingid, String flightid) {
 }
 
 
+public boolean insertToWaitlist(String username, String flight, String date) {
+	try {
+	Statement st = this.connection.createStatement();
+	int rs;
+	String q ="insert into waitlist values('"+date+"','"+flight+"','"+username+"');";
+	rs = st.executeUpdate(q);
+	return true;
+	} catch(Exception e) {
+		return false;
+	}
+}
 
 
 public ResultSet searchDirectFlight6(String origin, String destination, String dateString, String dateString2, String dateString3, String dateString4, String dateString5, String dateString6) {
@@ -840,17 +940,8 @@ public ResultSet searchDirectFlight3(String origin, String destination, String d
 		return null;
 		}
 
-		}
+}
 
-
-
-
-
-
-
-//askQuestion(question, username)
-
-/*
 
 public void askQuestion(String question, String username) {
 
@@ -859,16 +950,13 @@ public void askQuestion(String question, String username) {
 
 		st = this.connection.createStatement();
 		int rs;
-		rs = st.executeUpdate("Insert into question(question, username) values('"+question+"'+','+'"username+"')");
+		rs = st.executeUpdate("Insert into question(customer, question) values('"+username+"', '" + question +"')");
 	} catch (SQLException e) {
-		//INSERT INTO question (customer, question) VALUES ('Adam412', 'Second question?');
-		// INTO question (customer, question) VALUES ('Adam412', 'Second question?');
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-		//return null;
 	}
 }
-*/
+
 
 public ResultSet getReservationsByFlightNumber(String flightNumber) {
 		ResultSet rs; // Declare ResultSet without assigning a value
@@ -895,10 +983,8 @@ public ResultSet ReservationsFlight(String flightNumber) {
 
 		ResultSet rs = null;
 		try {
-		String query = "SELECT booking_id, flight_id, departs_date, arrives_date, seat_no, class, plane_id " +
-		"FROM Itinerary " +
-		"WHERE flight_id = ?";
-		System.out.println(query); // Debug: Print query
+		String query = "SELECT booking_id, flight_id, departs_date, arrives_date, seat_no, class, plane_id FROM Itinerary WHERE flight_id = ?";
+		System.out.println(query);
 
 		PreparedStatement pst = this.connection.prepareStatement(query);
 		pst.setString(1, flightNumber);
@@ -943,9 +1029,18 @@ public ResultSet getTicketsWithMaxFare() {
 		ResultSet rs = null; // Declare ResultSet without assigning a value
 		try {
 		// Prepare SQL query to find the ticket(s) with the maximum fare
-		String query = "SELECT username, total_fare " +
-		"FROM ticket t " +
-		"WHERE t.total_fare = (SELECT MAX(total_fare) FROM ticket)";
+
+		String query = "SELECT username, SUM(total_fare) as total_fare " +
+                "FROM ticket " +
+                "GROUP BY username " +
+                "HAVING SUM(total_fare) = ( " +
+                "    SELECT MAX(total_revenue) " +
+                "    FROM ( " +
+                "        SELECT SUM(total_fare) as total_revenue " +
+                "        FROM ticket " +
+                "        GROUP BY username " +
+                "    ) as revenue " +
+                ")";
 
 		System.out.println(query); // Print the query for debugging purposes
 

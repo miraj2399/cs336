@@ -19,7 +19,9 @@
   var today = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
   document.getElementById("today").value = today
   document.getElementById("today1").value = today
-  
+
+  const flexibleCheckbox = document.getElementById("flexible");
+  const isFlexible = flexibleCheckbox.checked;
 </script>
 
 <%
@@ -34,12 +36,16 @@ Welcome <%=session.getAttribute("user")%>
 
 %>
   <form action="search.jsp">
+  <label for="option1">Book a flight</label> <br><br>
   <label for="origin">From:</label><br>
   <input type="text" id="origin" name="origin" placeholder="EWR"><br>
   <label for="destination">To:</label><br>
   <input type="text" id="destination" name="destination" placeholder="LAX"><br><br>
-  <input type="date" id="date" name="date"><br><br><br>
-  
+  <label for="destination">Select a date:</label><br>
+  <input type="date" id="date" name="date"><br><br>
+   <label for="option1">Flexible dates</label>
+    <input type="checkbox" id="flexible" name="options" value="flexible"> <br><br>
+   <label for="option1">Trip type:</label> <br> <br>
   <input type="radio" id="oneway" name="choice" value="oneway" checked>
   <label for="oneway">One way</label>
   <input type="radio" id="roundtrip" name="choice" value="roundtrip">

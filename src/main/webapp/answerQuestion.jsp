@@ -26,7 +26,7 @@ try{
 	out.println("Selected question: the id is " + customerId + " and the username is " + customerUsername + " and the question is " + customerQuestion);
 	out.println("Write your reply:");
 	out.println("<input type='text' id='answer' name='answer' placeholder='reply'><br>");
-	out.println("<button onClick='handleSubmit(\"" + questionId + "\", document.getElementById(\"answer\").value, \"" + repUsername + "\")'>Select</button><br><br>");
+	out.println("<button onClick='handleSubmit(\"" + questionId + "\", document.getElementById(\"answer\").value, \"" + repUsername + "\")'>Submit</button><br><br>");
 
 }
 catch(Exception e){

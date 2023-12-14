@@ -12,7 +12,7 @@
 <%
     QueryManager queryManager = new QueryManager(); // Assuming QueryManager is correctly initialized with a DB connection
 
-    try {
+    try { 
         ResultSet rs = queryManager.getTicketsWithMaxFare();
         if (rs != null) {
             out.println("<h2>Tickets with the Maximum Fare</h2>");

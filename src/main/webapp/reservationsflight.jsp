@@ -10,6 +10,7 @@
 <%
 
 out.print("<form action='reservationsflight2.jsp'>");
+out.print("Type a flight number to get the reservations for it:<br>");
 out.print("<input type='String' name='flightNumber'>");
 out.print("<input type='submit' value ='submit'>");
 out.print("</form>");

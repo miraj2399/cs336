@@ -3,7 +3,10 @@
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%@ page import="java.text.*" %>
+<%@ page import="java.net.URLEncoder" %>
 <!DOCTYPE html>
+
+
 
 <script type="text/javascript">
   function handleSubmit(customerId, customerUsername, customerQuestion, repUsername, questionId)
@@ -15,44 +18,19 @@
   }
 </script>
 
-<% 
-try{
+<%
+try{  
 	String choice = request.getParameter("choice");
 	String repUsername = request.getParameter("repUsername");
 	out.println("your selection is: " + choice);
-
-	if (choice.equals("Add customer representative")) {
+	if (choice.equals("qna")) {
 		
-		response.sendRedirect("adminAddForm.jsp");
+		response.sendRedirect("customerView.jsp");
 		
-	} else if (choice.equals("Delete customer representative")) {
+	} else if (choice.equals("flightInfo")) {
 		
-		response.sendRedirect("adminDeleteForm.jsp");
-		
-	} else if (choice.equals("Edit customer representative")) {
-		
-		response.sendRedirect("adminEditForm.jsp");
-		
-	} else if (choice.equals("Get Sales")) {
-		
-		response.sendRedirect("adminGetSalesForm.jsp");
-		
-	} else if (choice.equals("Get reservations")) {
-		
-		response.sendRedirect("reservationsflight.jsp");
-		
-	} else if (choice.equals("Get summary of revenue")) {
-		
-		response.sendRedirect("summarrevenue.jsp");
-		
-	} else if (choice.equals("Top customer")) {
-		
-		response.sendRedirect("maxfare.jsp");
-				
-	} else if (choice.equals("Top active flights")) {
-		
-		response.sendRedirect("mostactive.jsp");
-			
+		response.sendRedirect("success.jsp");
+	
 	}
 		
 }
