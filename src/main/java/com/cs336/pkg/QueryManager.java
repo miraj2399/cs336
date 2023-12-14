@@ -748,7 +748,7 @@ public boolean changeClass(String bookingid, String flightid) {
 	try {
 		Statement st = this.connection.createStatement();
 		int rs;
-		String q = "update itinerary set seat = case when seat = 0 then 1 else 0 end where booking_id='"+bookingid+"' and flight_id='"+flightid+"';";
+		String q = "update itinerary set class = case when class = 0 then 1 else 0 end where booking_id='"+bookingid+"' and flight_id='"+flightid+"';";
 		rs = st.executeUpdate(q);
 		return true;
 	} catch(Exception e){
