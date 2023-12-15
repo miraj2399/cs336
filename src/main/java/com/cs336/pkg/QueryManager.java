@@ -39,7 +39,7 @@ public Connection getConnection() {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "rootroot");
+			connection = DriverManager.getConnection(connectionUrl,"root", "Lemonsoda123!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -874,18 +874,22 @@ public boolean changeClass(String bookingid, String flightid) {
 	}
 }
 
+public ResultSet getWaitingListByFlightId(String flightId) {
+	   ResultSet rs; 
+	   try {       
+	       String query = "SELECT username FROM waitlist WHERE flight_id = ?";
+	       PreparedStatement pst = this.connection.prepareStatement(query);
+	       pst.setString(1, flightId);
+	       rs = pst.executeQuery();
+	   } catch (SQLException e) {
+	       e.printStackTrace();
+	       rs = null;
+	   }
+	   return rs;
 
-public boolean insertToWaitlist(String username, String flight, String date) {
-	try {
-	Statement st = this.connection.createStatement();
-	int rs;
-	String q ="insert into waitlist values('"+date+"','"+flight+"','"+username+"');";
-	rs = st.executeUpdate(q);
-	return true;
-	} catch(Exception e) {
-		return false;
+
 	}
-}
+
 
 
 public ResultSet searchDirectFlight6(String origin, String destination, String dateString, String dateString2, String dateString3, String dateString4, String dateString5, String dateString6) {

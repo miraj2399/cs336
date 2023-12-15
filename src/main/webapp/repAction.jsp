@@ -49,6 +49,10 @@ try{
 		
 		response.sendRedirect("repEditFlightForm.jsp");	 
 		
+	}else if (choice.equals("waitlist")) {
+		
+		response.sendRedirect("repAction2.jsp");	 
+		
 	} else if (choice.equals("Delete info to flights")) {
 		
 		response.sendRedirect("repDeleteFlightForm.jsp");	

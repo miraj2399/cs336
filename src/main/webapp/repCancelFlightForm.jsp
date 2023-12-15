@@ -22,11 +22,15 @@ You are not logged in<br/>
 <%} else {
 %>
 <%=session.getAttribute("user")%>, please enter the username to book a flight for: 
-  <form action="repCancelFlightForUser.jsp">
-  <label for="destination">Username:</label><br>
-  <input type="text" id="username" name="username" placeholder="username"><br><br>  
-  <input type="submit" value="Submit" onClick="handleSubmit()">
-  </form>
+  <form action='EditReservation.jsp'>  
+<input type='text' name='Username of customer' placeholder='Username of customer'>
+<input type='text' name='bookingid' placeholder='booking id'>
+<input type='text' name='flightid' placeholder='flight id'>
+
+<button type='submit'> Edit Reservation </button>
+</form>
+<br><br>
+  
   
 <br>
 <a href='logout.jsp'>Log out</a>
